@@ -54,7 +54,7 @@ func (s *Server) HTTPHandler() http.Handler {
 	// Boot via iPXE
 	mux.Handle("/boot.ipxe", chain(ipxeInspect()))
 	mux.Handle("/boot.ipxe.0", chain(ipxeInspect()))
-	mux.Handle("/ipxe", chain(s.selectProfile(s.core, s.ipxeHandler())))
+	mux.Handle("/ipxe", chain(s.selectProfile(s.core, s.ipxeHandler(s.core))))
 	// Ignition Config
 	mux.Handle("/ignition", chain(s.selectGroup(s.core, s.ignitionHandler(s.core))))
 	// Cloud-Config
@@ -72,7 +72,7 @@ func (s *Server) HTTPHandler() http.Handler {
 		mux.Handle("/grub.sig", signerChain(s.selectProfile(s.core, s.grubHandler())))
 		mux.Handle("/boot.ipxe.sig", signerChain(ipxeInspect()))
 		mux.Handle("/boot.ipxe.0.sig", signerChain(ipxeInspect()))
-		mux.Handle("/ipxe.sig", signerChain(s.selectProfile(s.core, s.ipxeHandler())))
+		mux.Handle("/ipxe.sig", signerChain(s.selectProfile(s.core, s.ipxeHandler(s.core))))
 		mux.Handle("/ignition.sig", signerChain(s.selectGroup(s.core, s.ignitionHandler(s.core))))
 		mux.Handle("/cloud.sig", signerChain(s.selectGroup(s.core, s.cloudHandler(s.core))))
 		mux.Handle("/generic.sig", signerChain(s.selectGroup(s.core, s.genericHandler(s.core))))
@@ -85,7 +85,7 @@ func (s *Server) HTTPHandler() http.Handler {
 		mux.Handle("/grub.asc", signerChain(s.selectProfile(s.core, s.grubHandler())))
 		mux.Handle("/boot.ipxe.asc", signerChain(ipxeInspect()))
 		mux.Handle("/boot.ipxe.0.asc", signerChain(ipxeInspect()))
-		mux.Handle("/ipxe.asc", signerChain(s.selectProfile(s.core, s.ipxeHandler())))
+		mux.Handle("/ipxe.asc", signerChain(s.selectProfile(s.core, s.ipxeHandler(s.core))))
 		mux.Handle("/ignition.asc", signerChain(s.selectGroup(s.core, s.ignitionHandler(s.core))))
 		mux.Handle("/cloud.asc", signerChain(s.selectGroup(s.core, s.cloudHandler(s.core))))
 		mux.Handle("/generic.asc", signerChain(s.selectGroup(s.core, s.genericHandler(s.core))))

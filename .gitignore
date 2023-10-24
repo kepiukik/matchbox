@@ -33,3 +33,4 @@ _output/
 tools/
 contrib/registry/data
 contrib/rpm/*.tar.gz
+example.ipxe

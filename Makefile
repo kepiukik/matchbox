@@ -58,7 +58,7 @@ manifest:
 	buildah manifest push -f v2s2 $(IMAGE_REPO):$(VERSION) docker://$(IMAGE_REPO):$(VERSION)
 
 protoc/%:
-	podman run --security-opt label=disable \
+	docker run --security-opt label=disable \
 		-u root \
 		--mount type=bind,src=$(DIR),target=/mnt/code \
 		quay.io/dghubble/protoc:v3.10.1 \

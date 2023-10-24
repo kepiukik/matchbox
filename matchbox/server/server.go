@@ -58,6 +58,13 @@ type Server interface {
 
 	// Get a Cloud-Config template by name.
 	CloudGet(ctx context.Context, name string) (string, error)
+
+	// Create or update an iPXE template.
+	IPXEPut(context.Context, *pb.IPXEPutRequest) (string, error)
+	// Get an Generic template by name.
+	IPXEGet(context.Context, *pb.IPXEGetRequest) (string, error)
+	// Delete an Generic template by name.
+	IPXEDelete(context.Context, *pb.IPXEDeleteRequest) error
 }
 
 // Config configures a server implementation.
@@ -213,4 +220,23 @@ func (s *server) GenericDelete(ctx context.Context, req *pb.GenericDeleteRequest
 // CloudGet gets a Cloud-Config template by name.
 func (s *server) CloudGet(ctx context.Context, name string) (string, error) {
 	return s.store.CloudGet(name)
+}
+
+// IPXEPut creates or updates an iPXE template by name.
+func (s *server) IPXEPut(ctx context.Context, req *pb.IPXEPutRequest) (string, error) {
+	err := s.store.IPXEPut(req.Name, req.Config)
+	if err != nil {
+		return "", err
+	}
+	return string(req.Config), err
+}
+
+// IPXEGet gets an iPXE template by name.
+func (s *server) IPXEGet(ctx context.Context, req *pb.IPXEGetRequest) (string, error) {
+	return s.store.IPXEGet(req.Name)
+}
+
+// IPXEDelete deletes an iPXE template by name.
+func (s *server) IPXEDelete(ctx context.Context, req *pb.IPXEDeleteRequest) error {
+	return s.store.IPXEDelete(req.Name)
 }

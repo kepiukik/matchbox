@@ -110,3 +110,27 @@ message GenericDeleteRequest {
   string name = 1;
 }
 message GenericDeleteResponse {}
+
+
+// iPXE
+
+message IPXEPutRequest {
+  string name = 1;
+  bytes config = 2;
+}
+
+message IPXEPutResponse {}
+
+message IPXEGetRequest {
+  string name = 1;
+}
+
+message IPXEGetResponse {
+  bytes config = 1;
+}
+
+message IPXEDeleteRequest {
+  string name = 1;
+}
+
+message IPXEDeleteResponce {}

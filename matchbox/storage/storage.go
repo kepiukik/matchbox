@@ -48,4 +48,11 @@ type Store interface {
 
 	// CloudGet gets a Cloud-Config template by name.
 	CloudGet(name string) (string, error)
+
+	//iPXEPut creates or updates an iPXE template.
+	IPXEPut(name string, config []byte) error
+	//iPXEGet gets an iPXE template by name.
+	IPXEGet(name string) (string, error)
+	//iPXEDelete deletes an iPXE template by name.
+	IPXEDelete(name string) error
 }

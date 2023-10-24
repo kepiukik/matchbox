@@ -167,3 +167,19 @@ func (s *fileStore) CloudGet(name string) (string, error) {
 	data, err := Dir(s.root).readFile(filepath.Join("cloud", name))
 	return string(data), err
 }
+
+// iPXEPut creates or updates an iPXE template.
+func (s *fileStore) IPXEPut(name string, config []byte) error {
+	return Dir(s.root).writeFile(filepath.Join("ipxe", name), config)
+}
+
+// iPXEGet gets an iPXE template by name.
+func (s *fileStore) IPXEGet(name string) (string, error) {
+	data, err := Dir(s.root).readFile(filepath.Join("ipxe", name))
+	return string(data), err
+}
+
+// iPXEDelete gets deletes iPXE template by name.
+func (s *fileStore) IPXEDelete(name string) error {
+	return Dir(s.root).deleteFile(filepath.Join("ipxe", name))
+}

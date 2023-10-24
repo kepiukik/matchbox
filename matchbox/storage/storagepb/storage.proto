@@ -31,6 +31,8 @@ message Profile {
   NetBoot boot = 5;
   // generic config id
   string generic_id = 6;
+  // ipxe template id
+  string ipxe_id = 7;
 }
 
 // NetBoot describes network or PXE boot settings for a machine.

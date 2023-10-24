@@ -45,6 +45,16 @@ service Generic {
   rpc GenericDelete(serverpb.GenericDeleteRequest) returns (serverpb.GenericDeleteResponse) {};
 }
 
+// service Generic {
+//   // Create or update an iPXE template.
+//   rpc iPXEPut(serverpb.) returns (serverpb.GenericPutResponse) {};
+//   // Get an iPXE template by name.
+//   rpc GenericGet(serverpb.GenericGetRequest) returns (serverpb.GenericGetResponse) {};
+//   // Delete an iPXE template by name.
+//   rpc GenericDelete(serverpb.GenericDeleteRequest) returns (serverpb.GenericDeleteResponse) {};
+// }
+
+
 service Select {
   // SelectGroup returns the Group matching the given labels.
   rpc SelectGroup(serverpb.SelectGroupRequest) returns (serverpb.SelectGroupResponse) {};
