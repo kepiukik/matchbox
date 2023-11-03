@@ -79,8 +79,6 @@ func (s *Server) ipxeHandler(core server.Server) http.Handler {
 				"ipxeTemplate": profile.IpxeId,
 			}).Infof("No matching ipxe template, using default one")
 			tpl = defaultIpxeTemplate
-			http.NotFound(w, req)
-			// return
 		} else {
 			// match was successful
 			s.logger.WithFields(logrus.Fields{
