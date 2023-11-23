@@ -83,3 +83,18 @@ func (s *EmptyStore) GenericDelete(name string) error {
 func (s *EmptyStore) CloudGet(name string) (string, error) {
 	return "", fmt.Errorf("no Cloud-Config template %s", name)
 }
+
+// IPXEPut returns an error writing any IPXE template.
+func (s *EmptyStore) IPXEPut(name string, config []byte) error {
+	return fmt.Errorf("emptyStore does not accept IPXE templates")
+}
+
+// IPXEGet get returns an IPXE template not found error.
+func (s *EmptyStore) IPXEGet(name string) (string, error) {
+	return "", fmt.Errorf("no IPXE template %s", name)
+}
+
+// IPXEDelete returns a nil error (successful deletion).
+func (s *EmptyStore) IPXEDelete(name string) error {
+	return nil
+}

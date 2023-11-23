@@ -6,9 +6,11 @@ import (
 	"testing"
 
 	"context"
+
 	logtest "github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/poseidon/matchbox/matchbox/server"
 	"github.com/poseidon/matchbox/matchbox/storage/storagepb"
 	fake "github.com/poseidon/matchbox/matchbox/storage/testfakes"
 )
@@ -25,7 +27,8 @@ func TestIPXEInspect(t *testing.T) {
 func TestIPXEHandler(t *testing.T) {
 	logger, _ := logtest.NewNullLogger()
 	srv := NewServer(&Config{Logger: logger})
-	h := srv.ipxeHandler()
+	core := server.NewServer(&server.Config{Store: &fake.EmptyStore{}})
+	h := srv.ipxeHandler(core)
 	ctx := withProfile(context.Background(), fake.Profile)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
@@ -45,7 +48,8 @@ boot
 func TestIPXEHandler_MissingCtxProfile(t *testing.T) {
 	logger, _ := logtest.NewNullLogger()
 	srv := NewServer(&Config{Logger: logger})
-	h := srv.ipxeHandler()
+	core := server.NewServer(&server.Config{Store: &fake.EmptyStore{}})
+	h := srv.ipxeHandler(core)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
 	h.ServeHTTP(w, req)
@@ -55,7 +59,8 @@ func TestIPXEHandler_MissingCtxProfile(t *testing.T) {
 func TestIPXEHandler_RenderTemplateError(t *testing.T) {
 	logger, _ := logtest.NewNullLogger()
 	srv := NewServer(&Config{Logger: logger})
-	h := srv.ipxeHandler()
+	core := server.NewServer(&server.Config{Store: &fake.EmptyStore{}})
+	h := srv.ipxeHandler(core)
 	// a Profile with nil NetBoot forces a template.Execute error
 	ctx := withProfile(context.Background(), &storagepb.Profile{Boot: nil})
 	w := httptest.NewRecorder()
@@ -67,7 +72,8 @@ func TestIPXEHandler_RenderTemplateError(t *testing.T) {
 func TestIPXEHandler_WriteError(t *testing.T) {
 	logger, _ := logtest.NewNullLogger()
 	srv := NewServer(&Config{Logger: logger})
-	h := srv.ipxeHandler()
+	core := server.NewServer(&server.Config{Store: &fake.EmptyStore{}})
+	h := srv.ipxeHandler(core)
 	ctx := withProfile(context.Background(), fake.Profile)
 	w := NewUnwriteableResponseWriter()
 	req, _ := http.NewRequest("GET", "/", nil)

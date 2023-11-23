@@ -87,3 +87,18 @@ func (s *BrokenStore) GenericDelete(name string) error {
 func (s *BrokenStore) CloudGet(name string) (string, error) {
 	return "", errIntentional
 }
+
+// IPXEGet returns an error.
+func (s *BrokenStore) IPXEPut(name string, config []byte) error {
+	return errIntentional
+}
+
+// IPXEGet returns an error.
+func (s *BrokenStore) IPXEGet(name string) (string, error) {
+	return "", errIntentional
+}
+
+// IPXEDelete returns an error.
+func (s *BrokenStore) IPXEDelete(name string) error {
+	return errIntentional
+}

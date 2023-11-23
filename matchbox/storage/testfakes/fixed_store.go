@@ -13,6 +13,7 @@ type FixedStore struct {
 	IgnitionConfigs map[string]string
 	CloudConfigs    map[string]string
 	GenericConfigs  map[string]string
+	IPXEConfigs     map[string]string
 }
 
 // NewFixedStore returns a new FixedStore.
@@ -134,4 +135,24 @@ func (s *FixedStore) CloudGet(name string) (string, error) {
 		return config, nil
 	}
 	return "", fmt.Errorf("no Cloud-Config template %s", name)
+}
+
+// IPXE create or updates an IPXE template.
+func (s *FixedStore) IPXEPut(name string, config []byte) error {
+	s.IPXEConfigs[name] = string(config)
+	return nil
+}
+
+// IPXEGet returns an IPXE template by name.
+func (s *FixedStore) IPXEGet(name string) (string, error) {
+	if config, present := s.IPXEConfigs[name]; present {
+		return config, nil
+	}
+	return "", fmt.Errorf("no Ignition template %s", name)
+}
+
+// IPXEDelete deletes an IPXE template by name.
+func (s *FixedStore) IPXEDelete(name string) error {
+	delete(s.IPXEConfigs, name)
+	return nil
 }
