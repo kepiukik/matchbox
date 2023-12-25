@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"io/fs"
 	"path/filepath"
 	"strings"
 
@@ -13,6 +14,8 @@ import (
 type Config struct {
 	Root   string
 	Logger *logrus.Logger
+
+	IgnoreFilesStartFromDot bool
 }
 
 // fileStore implements ths Store interface. Queries to the file system
@@ -20,13 +23,16 @@ type Config struct {
 type fileStore struct {
 	root   string
 	logger *logrus.Logger
+
+	ignoreFilesStartFromDot bool
 }
 
 // NewFileStore returns a new memory-backed Store.
 func NewFileStore(config *Config) Store {
 	return &fileStore{
-		root:   config.Root,
-		logger: config.Logger,
+		root:                    config.Root,
+		logger:                  config.Logger,
+		ignoreFilesStartFromDot: config.IgnoreFilesStartFromDot,
 	}
 }
 
@@ -61,6 +67,10 @@ func (s *fileStore) GroupDelete(id string) error {
 	return Dir(s.root).deleteFile(filepath.Join("groups", id+".json"))
 }
 
+func (s *fileStore) isIgnoreFile(entry fs.DirEntry) bool {
+	return s.ignoreFilesStartFromDot && strings.HasSuffix(entry.Name(), ".")
+}
+
 // GroupList lists all machine Groups.
 func (s *fileStore) GroupList() ([]*storagepb.Group, error) {
 	files, err := Dir(s.root).readDir("groups")
@@ -69,6 +79,10 @@ func (s *fileStore) GroupList() ([]*storagepb.Group, error) {
 	}
 	groups := make([]*storagepb.Group, 0, len(files))
 	for _, finfo := range files {
+		if s.isIgnoreFile(finfo) {
+			continue
+		}
+
 		name := strings.TrimSuffix(finfo.Name(), filepath.Ext(finfo.Name()))
 		group, err := s.GroupGet(name)
 		if err == nil {
@@ -119,6 +133,10 @@ func (s *fileStore) ProfileList() ([]*storagepb.Profile, error) {
 	}
 	profiles := make([]*storagepb.Profile, 0, len(files))
 	for _, finfo := range files {
+		if s.isIgnoreFile(finfo) {
+			continue
+		}
+
 		name := strings.TrimSuffix(finfo.Name(), filepath.Ext(finfo.Name()))
 		profile, err := s.ProfileGet(name)
 		if err == nil {
