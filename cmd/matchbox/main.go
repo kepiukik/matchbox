@@ -25,24 +25,26 @@ var (
 
 func main() {
 	flags := struct {
-		address      string
-		rpcAddress   string
-		dataPath     string
-		assetsPath   string
-		logLevel     string
-		grpcCAFile   string
-		grpcCertFile string
-		grpcKeyFile  string
-		tlsCertFile  string
-		tlsKeyFile   string
-		tlsEnabled   bool
-		keyRingPath  string
-		version      bool
-		help         bool
+		address                 string
+		rpcAddress              string
+		dataPath                string
+		ignoreFilesStartFromDot bool
+		assetsPath              string
+		logLevel                string
+		grpcCAFile              string
+		grpcCertFile            string
+		grpcKeyFile             string
+		tlsCertFile             string
+		tlsKeyFile              string
+		tlsEnabled              bool
+		keyRingPath             string
+		version                 bool
+		help                    bool
 	}{}
 	flag.StringVar(&flags.address, "address", "127.0.0.1:8080", "HTTP listen address")
 	flag.StringVar(&flags.rpcAddress, "rpc-address", "", "RPC listen address")
 	flag.StringVar(&flags.dataPath, "data-path", "/var/lib/matchbox", "Path to data directory")
+	flag.BoolVar(&flags.ignoreFilesStartFromDot, "ignore-dot-files", false, "Ignore config files start from dot")
 	flag.StringVar(&flags.assetsPath, "assets-path", "/var/lib/matchbox/assets", "Path to static assets")
 
 	// Log levels https://github.com/sirupsen/logrus/blob/master/logrus.go#L36
@@ -134,8 +136,9 @@ func main() {
 
 	// storage
 	store := storage.NewFileStore(&storage.Config{
-		Root:   flags.dataPath,
-		Logger: log,
+		Root:                    flags.dataPath,
+		Logger:                  log,
+		IgnoreFilesStartFromDot: flags.ignoreFilesStartFromDot,
 	})
 
 	// core logic
